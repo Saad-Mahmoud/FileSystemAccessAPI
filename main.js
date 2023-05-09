@@ -1,12 +1,15 @@
-const selectFileButton = document.querySelector('#select-file');
-const fileContentDiv = document.querySelector('#file-content');
+const saveFileButton = document.querySelector('#save-file');
+const textToWriteTextarea = document.querySelector('#text-to-write');
 
-selectFileButton.addEventListener('click', async () => {
+saveFileButton.addEventListener('click', async () => {
   try {
-    const [fileHandle] = await window.showOpenFilePicker();
-    const file = await fileHandle.getFile();
-    const contents = await file.text();
-    fileContentDiv.textContent = contents;
+    const writableFileHandle = await window.showSaveFilePicker({
+      suggestedName: 'my-file.txt',
+    });
+    const writableFile = await writableFileHandle.createWritable();
+    const textToWrite = textToWriteTextarea.value;
+    await writableFile.write(textToWrite);
+    await writableFile.close();
   } catch (error) {
     console.error(error);
   }
